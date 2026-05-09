@@ -1,6 +1,6 @@
 # Enterprise Knowledge Data Platform
 
-A sample data engineering project for enterprise document ingestion, transformation, Snowflake analytics, and OpenSearch semantic retrieval.
+A data engineering project for enterprise document ingestion, transformation, Snowflake analytics, and OpenSearch semantic retrieval.
 
 ## Overview
 
