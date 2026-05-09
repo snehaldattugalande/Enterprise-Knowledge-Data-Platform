@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS SAM template for the enterprise knowledge data platform
+
+Globals:
+  Function:
+    Timeout: 120
+    Runtime: python3.11
+    Environment:
+      Variables:
+        CONFIG_PATH: config.yaml
+
+Resources:
+  IngestDocumentsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambdas.ingest_documents.handler
+      CodeUri: .
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(15 minutes)
+
+  TransformMetadataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambdas.transform_metadata.handler
+      CodeUri: .
+
+  SyncEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambdas.sync_event_handler.handler
+      CodeUri: .
+      Events:
+        S3PutEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref ArtifactBucket
+            Events: s3:ObjectCreated:*
+
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: enterprise-documents-artifacts
+
+  OpenSearchDomain:
+    Type: AWS::OpenSearchService::Domain
+    Properties:
+      DomainName: enterprise-documents-domain
+      EngineVersion: OpenSearch_2.7
+      ClusterConfig:
+        InstanceType: t3.small.search
+        InstanceCount: 1
+      EBSOptions:
+        EBSEnabled: true
+        VolumeSize: 10

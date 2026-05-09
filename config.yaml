@@ -1,0 +1,24 @@
+sharepoint:
+  tenant_id: "YOUR_SHAREPOINT_TENANT_ID"
+  client_id: "YOUR_APP_CLIENT_ID"
+  client_secret: "YOUR_APP_CLIENT_SECRET"
+  site_url: "https://yourtenant.sharepoint.com/sites/EnterpriseDocuments"
+  library_name: "Shared Documents"
+
+snowflake:
+  account: "YOUR_SNOWFLAKE_ACCOUNT"
+  user: "YOUR_SNOWFLAKE_USER"
+  password: "YOUR_SNOWFLAKE_PASSWORD"
+  warehouse: "COMPUTE_WH"
+  database: "ENTERPRISE_DB"
+  schema: "DOCUMENTS"
+  role: "SYSADMIN"
+
+opensearch:
+  host: "https://search-your-domain.us-east-1.es.amazonaws.com"
+  index_name: "enterprise-documents"
+
+aws:
+  region: "us-east-1"
+  s3_bucket: "enterprise-documents-lambda-artifacts"
+  lambda_role_arn: "arn:aws:iam::123456789012:role/enterprise-lambda-role"

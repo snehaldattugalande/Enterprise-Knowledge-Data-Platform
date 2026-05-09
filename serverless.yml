@@ -1,0 +1,35 @@
+service: enterprise-knowledge-data-platform
+provider:
+  name: aws
+  runtime: python3.11
+  region: us-east-1
+  timeout: 120
+  environment:
+    SHARED_CONFIG: config.yaml
+functions:
+  ingestDocuments:
+    handler: lambdas.ingest_documents.handler
+    events:
+      - schedule:
+          rate: rate(15 minutes)
+  transformMetadata:
+    handler: lambdas.transform_metadata.handler
+  syncEventHandler:
+    handler: lambdas.sync_event_handler.handler
+    events:
+      - s3:
+          bucket: ${self:provider.environment.S3_BUCKET}
+          event: s3:ObjectCreated:*
+resources:
+  Resources:
+    OpenSearchDomain:
+      Type: AWS::OpenSearch::Domain
+      Properties:
+        DomainName: enterprise-documents-domain
+        EngineVersion: OpenSearch_2.7
+        ClusterConfig:
+          InstanceType: t3.small.search
+          InstanceCount: 1
+        EBSOptions:
+          EBSEnabled: true
+          VolumeSize: 10
